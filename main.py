@@ -1,4 +1,4 @@
-from ventanas import VentanaMain
+from ventanas_app import VentanaMain
 
 def main():
     VentanaMain()
