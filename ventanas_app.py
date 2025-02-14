@@ -110,18 +110,101 @@ class Ventana1Window(QtWidgets.QWidget, Ui_page_v1):
 
     def on_ok_clicked(self):
         user_id = self.username_in.text()
-        if self.validate_user_id(user_id):
+        user_name = self.get_user_name(user_id)
+        if user_name:
             self.user_ivalid.setText("Usuario válido")
+            self.page_v2_window = Ventana2Window(user_name)
+            self.page_v2_window.show()
+            self.close()
         else:
             self.user_ivalid.setText("Usuario Invalido")
 
-    def validate_user_id(self, user_id):
+    def get_user_name(self, user_id):
         conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
         cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(1) FROM usuarios WHERE id = ?", (user_id,))
+        cursor.execute("SELECT nombre FROM usuarios WHERE id = ?", (user_id,))
         result = cursor.fetchone()
         conn.close()
-        return result[0] > 0
+        return result[0] if result else None
+
+# Clase generada por Qt Designer para page_v2
+class Ui_page_v2(object):
+    def setupUi(self, page_v2):
+        page_v2.setObjectName("page_v2")
+        page_v2.resize(492, 342)
+        self.user_active = QtWidgets.QLabel(page_v2)
+        self.user_active.setGeometry(QtCore.QRect(20, 0, 300, 20))  # Ajustar la posición y el tamaño
+        self.user_active.setObjectName("user_active")
+        self.tableView = QtWidgets.QTableView(page_v2)
+        self.tableView.setGeometry(QtCore.QRect(20, 40, 121, 211))
+        self.tableView.setObjectName("tableView")
+        self.Helados = QtWidgets.QPushButton(page_v2)
+        self.Helados.setGeometry(QtCore.QRect(160, 30, 91, 30))
+        self.Helados.setObjectName("Helados")
+        self.Paletas = QtWidgets.QPushButton(page_v2)
+        self.Paletas.setGeometry(QtCore.QRect(160, 60, 91, 30))
+        self.Paletas.setObjectName("Paletas")
+        self.Obleas = QtWidgets.QPushButton(page_v2)
+        self.Obleas.setGeometry(QtCore.QRect(160, 90, 91, 30))
+        self.Obleas.setObjectName("Obleas")
+        self.Brownie = QtWidgets.QPushButton(page_v2)
+        self.Brownie.setGeometry(QtCore.QRect(160, 120, 91, 30))
+        self.Brownie.setObjectName("Brownie")
+        self.Waffles = QtWidgets.QPushButton(page_v2)
+        self.Waffles.setGeometry(QtCore.QRect(160, 180, 91, 30))
+        self.Waffles.setObjectName("Waffles")
+        self.Fresas = QtWidgets.QPushButton(page_v2)
+        self.Fresas.setGeometry(QtCore.QRect(160, 150, 91, 30))
+        self.Fresas.setObjectName("Fresas")
+        self.Bebidas = QtWidgets.QPushButton(page_v2)
+        self.Bebidas.setGeometry(QtCore.QRect(160, 210, 91, 30))
+        self.Bebidas.setObjectName("Bebidas")
+        self.Otros = QtWidgets.QPushButton(page_v2)
+        self.Otros.setGeometry(QtCore.QRect(160, 240, 91, 30))
+        self.Otros.setObjectName("Otros")
+        self.pushButton_2 = QtWidgets.QPushButton(page_v2)
+        self.pushButton_2.setGeometry(QtCore.QRect(380, 300, 91, 30))
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton = QtWidgets.QPushButton(page_v2)
+        self.pushButton.setGeometry(QtCore.QRect(270, 300, 91, 30))
+        self.pushButton.setObjectName("pushButton")
+        self.label = QtWidgets.QLabel(page_v2)
+        self.label.setGeometry(QtCore.QRect(20, 250, 68, 22))
+        self.label.setObjectName("label")
+        self.label_2 = QtWidgets.QLabel(page_v2)
+        self.label_2.setGeometry(QtCore.QRect(70, 250, 68, 22))
+        self.label_2.setObjectName("label_2")
+        self.pushButton_3 = QtWidgets.QPushButton(page_v2)
+        self.pushButton_3.setGeometry(QtCore.QRect(40, 280, 91, 30))
+        self.pushButton_3.setObjectName("pushButton_3")
+
+        self.retranslateUi(page_v2)
+        QtCore.QMetaObject.connectSlotsByName(page_v2)
+
+    def retranslateUi(self, page_v2):
+        _translate = QtCore.QCoreApplication.translate
+        page_v2.setWindowTitle(_translate("page_v2", "page_v2"))
+        self.user_active.setText(_translate("page_v2", "usuario activo: _____"))
+        self.Helados.setText(_translate("page_v2", "Helados"))
+        self.Paletas.setText(_translate("page_v2", "Paletas"))
+        self.Obleas.setText(_translate("page_v2", "Obleas"))
+        self.Brownie.setText(_translate("page_v2", "Brownie"))
+        self.Waffles.setText(_translate("page_v2", "Waffles"))
+        self.Fresas.setText(_translate("page_v2", "Fresas"))
+        self.Bebidas.setText(_translate("page_v2", "Bebidas"))
+        self.Otros.setText(_translate("page_v2", "Otros"))
+        self.pushButton_2.setText(_translate("page_v2", "Atrás"))
+        self.pushButton.setText(_translate("page_v2", "OK"))
+        self.label.setText(_translate("page_v2", "Total:"))
+        self.label_2.setText(_translate("page_v2", "111111"))
+        self.pushButton_3.setText(_translate("page_v2", "Borrar"))
+
+# Clase principal de la aplicación para page_v2
+class Ventana2Window(QtWidgets.QWidget, Ui_page_v2):
+    def __init__(self, user_name):
+        super().__init__()
+        self.setupUi(self)  # Configura la interfaz gráfica
+        self.user_active.setText(f"usuario activo: {user_name}")
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)  # Crea la aplicación
