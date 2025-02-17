@@ -206,6 +206,68 @@ class Ventana2Window(QtWidgets.QWidget, Ui_page_v2):
         self.setupUi(self)  # Configura la interfaz gráfica
         self.user_active.setText(f"usuario activo: {user_name}")
 
+        # Conectar el botón Helados a la función manejadora
+        self.Helados.clicked.connect(self.on_helados_clicked)
+
+    def on_helados_clicked(self):
+        # boton 'cono 1'
+        self.new_button1 = QtWidgets.QPushButton(self)
+        self.new_button1.setGeometry(QtCore.QRect(260, 30, 91, 30))
+        self.new_button1.setText("cono 1")
+        self.new_button1.show()
+
+        # botón 'cono 2'
+        self.new_button2 = QtWidgets.QPushButton(self)
+        self.new_button2.setGeometry(QtCore.QRect(260, 70, 91, 30))
+        self.new_button2.setText("cono 2")
+        self.new_button2.show()
+
+        # botón 'canasta 2'
+        self.new_button3 = QtWidgets.QPushButton(self)
+        self.new_button3.setGeometry(QtCore.QRect(360, 30, 91, 30))
+        self.new_button3.setText("canasta 2")
+        self.new_button3.show()
+
+        # botón 'canasta 3'
+        self.new_button4 = QtWidgets.QPushButton(self)
+        self.new_button4.setGeometry(QtCore.QRect(360, 70, 91, 30))
+        self.new_button4.setText("canasta 3")
+        self.new_button4.show()
+
+        # botón 'super canasta'
+        self.new_button5 = QtWidgets.QPushButton(self)
+        self.new_button5.setGeometry(QtCore.QRect(360, 110, 91, 30))
+        self.new_button5.setText("super canasta")
+        self.new_button5.show()
+
+        # botón 'canasta frutal'
+        self.new_button6 = QtWidgets.QPushButton(self)
+        self.new_button6.setGeometry(QtCore.QRect(360, 150, 91, 30))
+        self.new_button6.setText("canasta frutal")
+        self.new_button6.show()
+
+        # botón 'canasta galette'
+        self.new_button7 = QtWidgets.QPushButton(self)
+        self.new_button7.setGeometry(QtCore.QRect(360, 190, 91, 30))
+        self.new_button7.setText("canasta galette")
+        self.new_button7.show()
+
+        # botón 'canasta pow ice'
+        self.new_button8 = QtWidgets.QPushButton(self)
+        self.new_button8.setGeometry(QtCore.QRect(360, 230, 91, 30))
+        self.new_button8.setText("canasta pow ice") 
+        self.new_button8.show()
+
+    ''' # Crear 7 botones debajo del botón 'canasta 2'
+        self.additional_buttons = []
+        for i in range(6):
+            button = QtWidgets.QPushButton(self)
+            button.setGeometry(QtCore.QRect(360, 70 + i * 40, 91, 30))
+            button.setText(f"botón {i+3}")
+            button.show()
+            self.additional_buttons.append(button)
+            '''
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)  # Crea la aplicación
     main_window = MainWindow()  # Crea una instancia de la ventana principal
