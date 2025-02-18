@@ -1,6 +1,6 @@
 import sys
 import sqlite3
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 
 # Clase generada por Qt Designer para vmain
 class Ui_main(object):
@@ -195,8 +195,8 @@ class Ui_page_v2(object):
         self.Otros.setText(_translate("page_v2", "Otros"))
         self.pushButton_2.setText(_translate("page_v2", "Atrás"))
         self.pushButton.setText(_translate("page_v2", "OK"))
-        self.label.setText(_translate("page_v2", "Total:"))
-        self.label_2.setText(_translate("page_v2", "111111"))
+        self.label.setText(_translate("page_v2", "Total: $"))
+        self.label_2.setText(_translate("page_v2", "    0"))
         self.pushButton_3.setText(_translate("page_v2", "Borrar"))
 
 # Clase principal de la aplicación para page_v2
@@ -208,6 +208,22 @@ class Ventana2Window(QtWidgets.QWidget, Ui_page_v2):
 
         # Conectar el botón Helados a la función manejadora
         self.Helados.clicked.connect(self.on_helados_clicked)
+        self.cono1_count = 0  # Contador para el botón 'cono 1'
+        self.cono2_count = 0  # Contador para el botón 'cono 2'
+        self.canasta2_count = 0  # Contador para el botón 'canasta 2'
+        self.canasta3_count = 0  # Contador para el botón 'canasta 3'
+        self.super_canasta_count = 0  # Contador para el botón 'super canasta'
+        self.canasta_infantil_count = 0  # Contador para el botón 'canasta infantil'
+        self.canasta_frutal_count = 0  # Contador para el botón 'canasta frutal'
+        self.canasta_galette_count = 0  # Contador para el botón 'canasta galette'
+        self.canasta_pow_ice_count = 0  # Contador para el botón 'canasta pow ice'
+        self.total_price = 0  # Total price
+        self.model = QtGui.QStandardItemModel()
+        self.model.setHorizontalHeaderLabels(['Product', 'Price', 'Cant'])
+        self.tableView.setModel(self.model)
+
+        # Conectar el botón Borrar a la función manejadora
+        self.pushButton_3.clicked.connect(self.on_borrar_clicked)
 
     def on_helados_clicked(self):
         # boton 'cono 1'
@@ -215,58 +231,296 @@ class Ventana2Window(QtWidgets.QWidget, Ui_page_v2):
         self.new_button1.setGeometry(QtCore.QRect(260, 30, 91, 30))
         self.new_button1.setText("cono 1")
         self.new_button1.show()
+        self.new_button1.clicked.connect(self.on_cono1_clicked)
 
         # botón 'cono 2'
         self.new_button2 = QtWidgets.QPushButton(self)
         self.new_button2.setGeometry(QtCore.QRect(260, 70, 91, 30))
         self.new_button2.setText("cono 2")
         self.new_button2.show()
+        self.new_button2.clicked.connect(self.on_cono2_clicked)
 
         # botón 'canasta 2'
         self.new_button3 = QtWidgets.QPushButton(self)
         self.new_button3.setGeometry(QtCore.QRect(360, 30, 91, 30))
         self.new_button3.setText("canasta 2")
         self.new_button3.show()
+        self.new_button3.clicked.connect(self.on_canasta2_clicked)
 
         # botón 'canasta 3'
         self.new_button4 = QtWidgets.QPushButton(self)
         self.new_button4.setGeometry(QtCore.QRect(360, 70, 91, 30))
         self.new_button4.setText("canasta 3")
         self.new_button4.show()
+        self.new_button4.clicked.connect(self.on_canasta3_clicked)
 
         # botón 'super canasta'
         self.new_button5 = QtWidgets.QPushButton(self)
         self.new_button5.setGeometry(QtCore.QRect(360, 110, 91, 30))
         self.new_button5.setText("super canasta")
         self.new_button5.show()
+        self.new_button5.clicked.connect(self.on_super_canasta_clicked)
 
         # botón 'canasta frutal'
         self.new_button6 = QtWidgets.QPushButton(self)
         self.new_button6.setGeometry(QtCore.QRect(360, 150, 91, 30))
         self.new_button6.setText("canasta frutal")
         self.new_button6.show()
+        self.new_button6.clicked.connect(self.on_canasta_frutal_clicked)
 
         # botón 'canasta galette'
         self.new_button7 = QtWidgets.QPushButton(self)
         self.new_button7.setGeometry(QtCore.QRect(360, 190, 91, 30))
         self.new_button7.setText("canasta galette")
         self.new_button7.show()
+        self.new_button7.clicked.connect(self.on_canasta_galette_clicked)
 
         # botón 'canasta pow ice'
         self.new_button8 = QtWidgets.QPushButton(self)
         self.new_button8.setGeometry(QtCore.QRect(360, 230, 91, 30))
         self.new_button8.setText("canasta pow ice") 
         self.new_button8.show()
+        self.new_button8.clicked.connect(self.on_canasta_pow_ice_clicked)
 
-    ''' # Crear 7 botones debajo del botón 'canasta 2'
-        self.additional_buttons = []
-        for i in range(6):
-            button = QtWidgets.QPushButton(self)
-            button.setGeometry(QtCore.QRect(360, 70 + i * 40, 91, 30))
-            button.setText(f"botón {i+3}")
-            button.show()
-            self.additional_buttons.append(button)
-            '''
+        # botón 'canasta infantil'
+        self.new_button9 = QtWidgets.QPushButton(self)
+        self.new_button9.setGeometry(QtCore.QRect(360, 270, 91, 30))
+        self.new_button9.setText("canasta infantil") 
+        self.new_button9.show()
+        self.new_button9.clicked.connect(self.on_canasta_infantil_clicked)
+
+    def on_cono1_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'cono 1'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.cono1_count += 1
+            self.total_price += price
+
+            # Check if "cono 1" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "cono 1":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.cono1_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.cono1_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_cono2_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'cono 2'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.cono2_count += 1
+            self.total_price += price
+
+            # Check if "cono 2" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "cono 2":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.cono2_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.cono2_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_canasta2_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'canasta 2'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.canasta2_count += 1
+            self.total_price += price
+
+            # Check if "canasta 2" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "canasta 2":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.canasta2_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.canasta2_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_canasta3_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'canasta 3'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.canasta3_count += 1
+            self.total_price += price
+
+            # Check if "canasta 3" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "canasta 3":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.canasta3_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.canasta3_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_super_canasta_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'super canasta'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.super_canasta_count += 1
+            self.total_price += price
+
+            # Check if "super canasta" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "super canasta":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.super_canasta_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.super_canasta_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_canasta_infantil_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'canasta infantil'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.canasta_infantil_count += 1
+            self.total_price += price
+
+            # Check if "canasta infantil" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "canasta infantil":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.canasta_infantil_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.canasta_infantil_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_canasta_frutal_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'canasta frutal'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.canasta_frutal_count += 1
+            self.total_price += price
+
+            # Check if "canasta frutal" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "canasta frutal":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.canasta_frutal_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.canasta_frutal_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_canasta_galette_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'canasta galette'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.canasta_galette_count += 1
+            self.total_price += price
+
+            # Check if "canasta galette" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "canasta galette":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.canasta_galette_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.canasta_galette_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_canasta_pow_ice_clicked(self):
+        conn = sqlite3.connect('/home/andres/Documentos/App_pow_ice/databases/Pow_Ice')
+        cursor = conn.cursor()
+        cursor.execute("SELECT product, price FROM products WHERE product = 'canasta pow ice'")
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            product, price = result
+            self.canasta_pow_ice_count += 1
+            self.total_price += price
+
+            # Check if "canasta pow ice" already exists in the table
+            for row in range(self.model.rowCount()):
+                if self.model.item(row, 0).text() == "canasta pow ice":
+                    self.model.setItem(row, 2, QtGui.QStandardItem(str(self.canasta_pow_ice_count)))
+                    break
+            else:
+                self.model.appendRow([QtGui.QStandardItem(product), QtGui.QStandardItem(str(price)), QtGui.QStandardItem(str(self.canasta_pow_ice_count))])
+
+            self.label_2.setText(str(self.total_price))
+
+    def on_borrar_clicked(self):
+        if self.model.rowCount() > 0:
+            last_row = self.model.rowCount() - 1
+            product_item = self.model.item(last_row, 0)
+            price_item = self.model.item(last_row, 1)
+            cant_item = self.model.item(last_row, 2)
+            if product_item and price_item and cant_item:
+                product = product_item.text()
+                price = float(price_item.text())
+                cant = int(cant_item.text())
+                self.total_price -= price * cant
+                if self.total_price < 0:
+                    self.total_price = 0
+                self.label_2.setText(str(self.total_price))
+                cant_item.setText("0")
+                if product == "cono 1":
+                    self.cono1_count = 0
+                elif product == "cono 2":
+                    self.cono2_count = 0
+                elif product == "canasta 2":
+                    self.canasta2_count = 0
+                elif product == "canasta 3":
+                    self.canasta3_count = 0
+                elif product == "super canasta":
+                    self.super_canasta_count = 0
+                elif product == "canasta infantil":
+                    self.canasta_infantil_count = 0
+                elif product == "canasta frutal":
+                    self.canasta_frutal_count = 0
+                elif product == "canasta galette":
+                    self.canasta_galette_count = 0
+                elif product == "canasta pow ice":
+                    self.canasta_pow_ice_count = 0
+            self.model.removeRow(last_row)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)  # Crea la aplicación
